@@ -4,7 +4,15 @@
 
 include('database_connection.php');
 
-$query = "SELECT repoName FROM reposDet";
+$response = file_get_contents('http://localhost:8080/userId');
+
+$JSONO=json_decode($response);
+
+
+$res= $JSONO[0]->userId;
+
+$query = "SELECT * FROM reposDet where userId='$res'";
+
 
 $statement = $connect->prepare($query);
 
@@ -16,7 +24,7 @@ $output = '<option value="0">select repos</option>';
 
 foreach($result as $row)
 {
- $output .= '<option value="'.$row["id"].'">'.$row["name"].'</option>';
+ $output .= '<option value="'.$row["pid"].'" namer="'.$row["name"].'">'.$row["name"].'</option>';
 }
 
 echo $output;

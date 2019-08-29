@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
   <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css" />
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <style>
   </style>
  </head>
@@ -23,7 +22,7 @@
       
       <div class="form-group">
        <label>Enter New Repositories</label>
-       <input type="text" name="names" id="names" class="form-control">
+       <input type="text" name="names" id="names" onchange='handleChange(event)' class="form-control">
       </div>
 
 	  <div class="form-group">
@@ -38,8 +37,8 @@
      </form>
     <form method="POST" id="Submit_form">
     <div class="form-group">
-       <label>Select Parent</label>
-       <select name="pid" id="pid" class="form-control">
+       <label>Select Repository</label>
+       <select name="pid" id="pid" name ="" class="form-control">
        
        </select>
       </div>
@@ -57,6 +56,11 @@
    </div>
   </div>
   <script>
+  var field="";
+  function handleChange(event){
+
+    field=event.target.value
+  }
 
 
 $(document).ready(function(){
@@ -76,22 +80,18 @@ $(document).ready(function(){
  }
 
  $('#treeview_form').on('submit', function(event){
-  console.log(this['names']['value'])
-  var convertt = this['names']['value'];
-  var reeeepo = JSON.stringify(convertt);
-  axios.post("http://localhost:8080/gettingRepo",{
-      reeeepo
-  })
-  // $.ajax({
-  //      url:"http://localhost:8080/gettingRepo",
-  //      method:"POST",
-  //      data:{'repoNamess': reeeepo},
-  //      success:function(data){
-  //       alert(data);
-  //      }
-  //     })
-  
   event.preventDefault();
+
+  $.ajax({
+   url:"http://localhost:8080/creatingRepo",
+   method:"POST",
+   data:{"rep":field},
+   success:function(data){
+    
+    alert(field+" is created in github");
+   }
+  })
+
   $.ajax({
    url:"addRe.php",
    method:"POST",
@@ -101,7 +101,6 @@ $(document).ready(function(){
     alert(data);
    }
   })
-  
  }); 
 
 
@@ -111,6 +110,7 @@ $(document).ready(function(){
     var sendRepo = JSON.parse(c);
     console.log("############");
     console.log(typeof(sendRepo));
+    
     console.log($(sendRepo).serialize());
     console.log("############");
     $.ajax({
@@ -121,10 +121,23 @@ $(document).ready(function(){
         alert(data);
        }
       })
+     
+      
+      var e = document.getElementById("pid");
+var strUser = e.options[e.selectedIndex].text;
    
+$.ajax({
+   url:"http://localhost:8080/repForJob",
+   method:"POST",
+   data:{"rep":strUser},
+   success:function(data){
+    
+    alert("aaaa" );
+   }
+  })
   
 
-  window.location.href = "index.php";
+ window.location.href = "index.php";
 
  });
 });

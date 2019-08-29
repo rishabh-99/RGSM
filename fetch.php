@@ -6,7 +6,25 @@ include('database_connection.php');
 
 $pid = 0;
 
-$query = "SELECT * FROM fileStructure";
+$response = file_get_contents('http://localhost:8080/userId');
+$JSONO=json_decode($response);
+
+
+$reb= $JSONO[0]->userId;
+
+$response1 = file_get_contents('http://localhost:8080/idRepos');
+$JSON1=json_decode($response1);
+
+
+$reb1= $JSON1;
+
+// for userId
+$res=(int)$reb;
+// for repoId
+$res1=(int)$reb1;
+
+$data="";
+$query = "SELECT * FROM fileStructure where userId = '$reb' and repoId = '$JSON1'";
 
 $statement = $connect->prepare($query);
 
@@ -23,7 +41,25 @@ echo json_encode(array_values($data));
 
 function get_node_data($pid, $connect)
 {
- $query = "SELECT * FROM fileStructure WHERE pid = '".$pid."'";
+    $response = file_get_contents('http://localhost:8080/userId');
+$JSONO=json_decode($response);
+
+
+$reb= $JSONO[0]->userId;
+
+$response1 = file_get_contents('http://localhost:8080/idRepos');
+$JSON1=json_decode($response1);
+
+
+$reb1= $JSON1;
+
+// for userId
+$res=(int)$reb;
+// for repoId
+$res1=(int)$reb1;
+
+
+ $query = "SELECT * FROM fileStructure WHERE pid = '$pid' and userID = '$reb' and repoId = '$JSON1'";
 
  $statement = $connect->prepare($query);
  $statement->execute();
